@@ -1,9 +1,13 @@
 {% extends 'blog/base.html' %}
 {% block content %}
 
-<h2> User detail :- </h2>
+<h3 style="color: Red"> User detail :- </h3>
+
     <form method="get">
-    	<h3> username : {{request.user}} </h3>	
+    	<h4> username : {{request.user.username}} </h4>	
+    	<h4> first_name : {{request.user.first_name}} </h4>	
+    	<h4> last_name : {{request.user.last_name}} </h4>	
+    	<h4> email id : {{request.user.email}} </h4>	
     </form>
 
-{% endblock %} 
+{% endblock %}

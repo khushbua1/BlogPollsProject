@@ -16,17 +16,19 @@
 
         <div style="font-size: 30px">
             <h1><a href="/">Django Girls Blog</a></h1>
-            <h1><a href="polls/">Click For Polls</a></h1>
+            <h1><a href="{% url 'polls:index' %}">Click For Polls</a></h1>
+            <h1><a href="{% url 'blog:tag_list' %}"> Tags </a></h1>
+            <h1><a href="{% url 'blog:category_list' %}"> Category </a></h1>
         </div>
 
         <div style="text-align: right; font-size: 25px;">
-            <a href="signup/">Sign Up</a>
+            <a href="{% url 'blog:signup' %}">Sign Up</a>
         </div>
 
         <div>
             {% if user.is_authenticated %}
-             <p><a href="user_detail/" style="color: white"></a></p>
-                <p><a href="logout/">logout</a></p>
+             <p> <a href="{% url 'blog:user_detail' %}" style="color: white;"> Welcome {{ user.username }} </a> </p>
+                <p><a href="{% url 'blog:logout' %}" style="font-size: 25px;" >logout</a></p>
         {% else %}
                 <p><b>You are not logged in</b></p>
                 <a href="{% url 'login' %}">login</a>

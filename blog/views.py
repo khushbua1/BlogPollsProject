@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from .models import Post
+from .models import Post, Category, Tag
 from .forms import PostForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
@@ -14,7 +14,6 @@ def post_list(request):
 
 def post_detail(request, slug):
 	post=get_object_or_404(Post, slug=slug)
-	print(slug)
 	return render(request, 'blog/post_detail.html', {'post': post}) 
 
 def post_new(request):
@@ -73,36 +72,31 @@ def user_detail(request):
 		form = UserCreationForm()
 	return render(request, 'blog/user_detail.html', {'form' : form})
 
-# def login(request):
-# 	if request.method == "POST":
-# 		form = UserCreationForm(request.POST)
-# 		if form.is_valid():
-# 			post = form.save()
-# 			username = form.cleaned_data.get('username')
-# 			raw_password = form.cleaned_data.get('password1')
-# 			user = authenticate (username=username, password=raw_password)
-# 			login(request, user)
-# 			return redirect('blog:post_list')
-# 	else:
-# 		form = UserCreationForm()
-# 	return render(request, 'blog/signup.html', {'form':form})
+# View function to show post related to Tag
+
+def tag_list(request):
+	tags = Tag.objects.all()
+	return render(request, 'blog/tag_list.html', {'tags' : tags})
+
+def tag_post_list(request, slug):
+	tag = Tag.objects.get(slug=slug)
+	posts = Post.objects.filter(tag=tag)
+	context = { 'tag' : tag , 'posts' : posts }
+	return render(request, 'blog/tag_post_list.html',  context )	
+
+# View function to show post related to Category
+
+def category_list(request):
+	categorys = Category.objects.filter(updated_time__lte=timezone.now()).order_by('updated_time')
+	return render(request, 'blog/category_list.html', {'categorys': categorys})
+
+def category_post_list(request, slug):
+	category = Category.objects.get(slug=slug)
+	posts = Post.objects.filter(category=category).all()
+	context = {'category' : category , 'posts' : posts}
+	# print (context)
+	return render(request, 'blog/category_post_list.html', context )	
 
 
-# def login(request):
-# 	if request.user.is_authenticated:
-# 		 return redirect('registration/login.html')
 
-# 	if request.method == 'POST':
-# 			username = request.POST.get('username')
-# 			password = request.POST.get('password')
-# 			user = auth.authenticate(username=username, password=password)
 
-# 			if user is not None:
-# 				# correct username and password login the user
-# 				auth.login(request, user)
-# 				return redirect('registration/login.html')
-
-# 			else:
-# 				messages.error(request, 'Error wrong username/password')
-
-# 	return render(request, 'blog/logout.html')
